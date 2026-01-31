@@ -78,7 +78,7 @@ export const ExchangeForm = () => {
                 <ArrowUpIcon />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align="start">
               <DropdownMenuGroup>
                 {availableCurrencies.map((rate) => {
                   const meta = CURRENCY_META[rate.currency];

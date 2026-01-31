@@ -43,7 +43,9 @@ export const useExchangeForm = () => {
   );
 
   const quote = useQuote(exchangeType, selectedCurrency, forexAmount);
-  const orderMutation = useOrder();
+  const orderMutation = useOrder({
+    onSuccess: () => form.reset(),
+  });
 
   const handleSubmit = form.handleSubmit(() => {
     if (!selectedRate?.exchangeRateId) return;
