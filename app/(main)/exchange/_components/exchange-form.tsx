@@ -14,6 +14,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { CurrencyInput } from './currency-input';
 import { useQuote } from '../_hooks/useQuote';
+import { Currency } from '@/types/exchange.type';
 
 type ExchangeType = 'buy' | 'sell';
 const CURRENCY_LIST: { name: string; value: 'USD' | 'JPY'; iconUrl: string }[] =
@@ -32,9 +33,8 @@ const CURRENCY_LIST: { name: string; value: 'USD' | 'JPY'; iconUrl: string }[] =
 
 export const ExchangeForm = () => {
   const [exchangeType, setExchangeType] = useState<ExchangeType>('buy');
-  const [selectedCurrency, setSelectedCurrency] = useState<'USD' | 'JPY'>(
-    'USD'
-  );
+  const [selectedCurrency, setSelectedCurrency] =
+    useState<Exclude<Currency, 'KRW'>>('USD');
   const [forexAmount, setForexAmount] = useState<string>('0');
   const { data } = useQuote(
     exchangeType,

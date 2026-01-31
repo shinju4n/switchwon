@@ -2,10 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { requestQuoteApi } from '../_api/quote.api';
 import { QuoteRequest } from '../_types/quote.type';
 import { useEffect, useState } from 'react';
+import { Currency } from '@/types/exchange.type';
 
 const getQuoteRequest = (
   type: 'buy' | 'sell',
-  selectedCurrency: 'USD' | 'JPY',
+  selectedCurrency: Exclude<Currency, 'KRW'>,
   forexAmount: number
 ): QuoteRequest => {
   const fromCurrency = type === 'buy' ? 'KRW' : selectedCurrency;
@@ -19,7 +20,7 @@ const getQuoteRequest = (
 
 export const useQuote = (
   type: 'buy' | 'sell',
-  selectedCurrency: 'USD' | 'JPY',
+  selectedCurrency: Exclude<Currency, 'KRW'>,
   forexAmount: number
 ) => {
   const [debouncedAmount, setDebouncedAmount] = useState(forexAmount);

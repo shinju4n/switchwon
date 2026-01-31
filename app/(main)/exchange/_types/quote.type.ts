@@ -1,6 +1,8 @@
+import { Currency } from '@/types/exchange.type';
+
 export type QuoteRequest = {
-  fromCurrency: 'KRW' | 'USD' | 'JPY';
-  toCurrency: 'KRW' | 'USD' | 'JPY';
+  fromCurrency: Currency;
+  toCurrency: Currency;
   forexAmount: number;
 };
 
