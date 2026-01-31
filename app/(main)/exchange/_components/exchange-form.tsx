@@ -1,20 +1,80 @@
 'use client';
 
 import { CustomInput } from '@/components/custom/custom-input';
+import { ArrowUpIcon, CircleArrowDownIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import Image from 'next/image';
 
 type ExchangeType = 'buy' | 'sell';
+const CURRENCY_LIST = [
+  {
+    name: '미국 USD',
+    value: 'USD',
+    iconUrl: '/icons/united-states.png',
+  },
+  {
+    name: '일본 JPY',
+    value: 'JPY',
+    iconUrl: '/icons/japan.png',
+  },
+];
 
 export const ExchangeForm = () => {
   const [exchangeType, setExchangeType] = useState<ExchangeType>('buy');
+  const [selectedCurrency, setSelectedCurrency] = useState<string>('USD');
 
   return (
     <div className="flex flex-col justify-between gap-8 rounded-[12px] border border-gray-300 bg-[#F7F8F9] px-8 py-6">
       <div className="flex flex-col gap-8">
-        <div>
-          <p className="text-2xl font-bold">환전 하기</p>
+        <div className="flex flex-col gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="w-fit cursor-pointer text-2xl font-bold"
+              >
+                <Image
+                  src={
+                    CURRENCY_LIST.find(
+                      (currency) => currency.value === selectedCurrency
+                    )?.iconUrl || ''
+                  }
+                  alt={selectedCurrency}
+                  width={24}
+                  height={24}
+                />
+                {selectedCurrency} 환전하기
+                <ArrowUpIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                {CURRENCY_LIST.map((currency) => (
+                  <DropdownMenuItem
+                    key={currency.value}
+                    onClick={() => setSelectedCurrency(currency.value)}
+                  >
+                    <Image
+                      src={currency.iconUrl}
+                      alt={currency.value}
+                      width={24}
+                      height={24}
+                    />
+                    {currency.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div className="flex gap-2 rounded-[12px] border border-gray-300 bg-white p-2">
             <button
               onClick={() => setExchangeType('buy')}
@@ -50,20 +110,7 @@ export const ExchangeForm = () => {
             }}
           />
           <div className="flex justify-center">
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect width="40" height="40" rx="20" fill="#D0D6DB" />
-              <path
-                d="M12.125 15.5L20 23.375L27.875 15.5"
-                stroke="white"
-                strokeWidth="2.25"
-              />
-            </svg>
+            <CircleArrowDownIcon />
           </div>
           <CustomInput
             label="필요 원화"
