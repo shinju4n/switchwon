@@ -1,10 +1,21 @@
+interface ApiErrorResponse {
+  code: string;
+  message: string;
+  data?: unknown;
+}
+
 export class ApiError extends Error {
+  public code: string;
+  public data?: unknown;
+
   constructor(
     public status: number,
-    message: string
+    response: ApiErrorResponse
   ) {
-    super(message);
+    super(response.message);
     this.name = 'ApiError';
+    this.code = response.code;
+    this.data = response.data;
   }
 }
 
@@ -20,9 +31,11 @@ export const api = async <T>(
     ...options,
   });
 
+  const data = await response.json();
+
   if (!response.ok) {
-    throw new ApiError(response.status, String(response.status));
+    throw new ApiError(response.status, data);
   }
 
-  return response.json();
+  return data;
 };

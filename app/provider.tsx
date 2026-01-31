@@ -12,7 +12,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { ApiError } from '@/lib/api';
 
 const handleGlobalError = (error: Error) => {
-  if (error instanceof ApiError && error.status === 401) {
+  if (error instanceof ApiError && error.code === 'UNAUTHORIZED') {
     const { pathname, search } = window.location;
     const fullPath = search ? `${pathname}${search}` : pathname;
     const returnTo = encodeURIComponent(fullPath);

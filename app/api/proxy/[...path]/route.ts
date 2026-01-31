@@ -1,4 +1,5 @@
 import { TOKEN_KEY } from '@/constants/token';
+import { ApiResponse } from '@/types/common.type';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -31,9 +32,9 @@ export const ALL_METHODS = async (
       body,
     });
 
-    const data = await response.json();
+    const data: ApiResponse<unknown> = await response.json();
 
-    if (response.status === 401) {
+    if (data.code === 'UNAUTHORIZED') {
       cookieStore.delete(TOKEN_KEY);
       return NextResponse.json(data, { status: 401 });
     }
