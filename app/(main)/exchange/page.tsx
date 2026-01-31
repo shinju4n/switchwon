@@ -10,11 +10,12 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 import { getExchangeRatesLatestApi } from './_api/exchange-rates.api';
+import { queryKeys } from '@/constants/query-keys';
 
 const ExchangePage = async () => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['exchangeRatesLatest'],
+    queryKey: queryKeys.exchange.rates(),
     queryFn: () => getExchangeRatesLatestApi(),
   });
 

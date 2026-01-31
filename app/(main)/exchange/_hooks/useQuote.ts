@@ -3,6 +3,7 @@ import { requestQuoteApi } from '../_api/quote.api';
 import { QuoteRequest } from '../_types/quote.type';
 import { useEffect, useState } from 'react';
 import { Currency } from '@/types/exchange.type';
+import { queryKeys } from '@/constants/query-keys';
 
 const getQuoteRequest = (
   type: 'buy' | 'sell',
@@ -34,7 +35,7 @@ export const useQuote = (
     return () => clearTimeout(handler);
   }, [forexAmount]);
   const { data, isLoading, error } = useQuery({
-    queryKey: ['quote', type, debouncedAmount],
+    queryKey: queryKeys.exchange.quote(type, debouncedAmount),
     queryFn: () =>
       requestQuoteApi(getQuoteRequest(type, selectedCurrency, debouncedAmount)),
     enabled: debouncedAmount > 0,
