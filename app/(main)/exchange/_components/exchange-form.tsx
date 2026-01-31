@@ -1,6 +1,5 @@
 'use client';
 
-import { CustomInput } from '@/components/custom/custom-input';
 import { ArrowUpIcon, CircleArrowDownIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,6 +12,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import Image from 'next/image';
+import { CurrencyInput } from './currency-input';
 
 type ExchangeType = 'buy' | 'sell';
 const CURRENCY_LIST = [
@@ -101,24 +101,24 @@ export const ExchangeForm = () => {
           </div>
         </div>
         <div className="flex flex-col gap-4 pb-[76px]">
-          <CustomInput
+          <CurrencyInput
             label="매도 금액"
-            inputOptions={{
-              type: 'text',
-              placeholder: '환전 하기',
-              className: 'bg-white',
-            }}
+            suffix={
+              <span className="text-[20px] font-medium text-[#646F7C]">
+                달러 팔기
+              </span>
+            }
           />
           <div className="flex justify-center">
             <CircleArrowDownIcon />
           </div>
-          <CustomInput
+          <CurrencyInput
             label="필요 원화"
-            inputOptions={{
-              type: 'text',
-              placeholder: '환전 하기',
-              className: 'bg-white',
-            }}
+            suffix={
+              <span className="text-[20px] font-bold text-[#3479EB]">
+                원 받을 수 있어요
+              </span>
+            }
           />
         </div>
       </div>
