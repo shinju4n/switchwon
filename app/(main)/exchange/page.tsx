@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/layout/page-header';
-import { CurrencySelector } from './_components/currency-selector';
+import { CurrencyDashboard } from './_components/currency-dashboard';
 import { WalletCard } from './_components/wallet-card';
 import { ExchangeForm } from './_components/exchange-form';
 
@@ -12,7 +12,7 @@ const ExchangePage = () => {
       />
       <div className="grid grid-cols-2 gap-6 p-20 pt-0">
         <div className="flex flex-col gap-6">
-          <CurrencySelector />
+          <CurrencyDashboard />
           <WalletCard />
         </div>
         <ExchangeForm />
