@@ -3,7 +3,8 @@ import type { NextRequest } from 'next/server';
 import { TOKEN_KEY } from './constants/token';
 import { DEFAULT_PROTECTED_PATH } from './constants/path';
 
-const PROTECTED_PATHS = ['/exchange', '/history'];
+const PROTECTED_PATHS = ['/exchange', '/exchange-history'];
+const UNPROTECTED_PATHS = ['/login'];
 
 export const proxy = (request: NextRequest) => {
   // 토큰 확인
@@ -19,8 +20,10 @@ export const proxy = (request: NextRequest) => {
     url.searchParams.set('redirect', pathname);
     return NextResponse.redirect(url);
   }
+
   // 이미 로그인되어 있는 상태라면
-  if (!isProtectedPath && token) {
+  const isUnprotectedPath = UNPROTECTED_PATHS.includes(pathname);
+  if (isUnprotectedPath && token) {
     return NextResponse.redirect(new URL(DEFAULT_PROTECTED_PATH, request.url));
   }
 
