@@ -9,3 +9,4 @@ Package Manager : pnpm
 Styling : tailwind CSS, shadcn/ui (component library)
 State & Data Fetching : TanStack Query, Zustand
 Form & Validation: React Hook Form, zod
+ETC: prettier, husky, lint-stage
