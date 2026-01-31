@@ -3,7 +3,7 @@
 import { CustomInput } from '@/components/custom/custom-input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useLogin } from '../_hooks/use-login';
+import { useLogin } from '../_hooks/useLogin';
 
 export const LoginForm = () => {
   const { loginForm, requestLogin, isPending } = useLogin();

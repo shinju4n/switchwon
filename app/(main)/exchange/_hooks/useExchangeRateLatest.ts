@@ -5,5 +5,6 @@ export const useExchangeRateLatest = () => {
   return useSuspenseQuery({
     queryKey: ['exchangeRatesLatest'],
     queryFn: () => getExchangeRatesLatestApi(),
+    refetchInterval: 1000 * 60 * 1,
   });
 };
