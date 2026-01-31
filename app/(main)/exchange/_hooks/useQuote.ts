@@ -1,43 +1,47 @@
 import { useQuery } from '@tanstack/react-query';
-import { requestQuoteApi } from '../_api/quote.api';
-import { QuoteRequest } from '../_types/quote.type';
 import { useEffect, useState } from 'react';
-import { Currency } from '@/types/exchange.type';
+import { requestQuoteApi } from '../_api/quote.api';
 import { queryKeys } from '@/constants/query-keys';
+import {
+  getCurrencyPair,
+  ExchangeType,
+  ForexCurrency,
+} from '../_utils/currency';
 
-const getQuoteRequest = (
-  type: 'buy' | 'sell',
-  selectedCurrency: Exclude<Currency, 'KRW'>,
-  forexAmount: number
-): QuoteRequest => {
-  const fromCurrency = type === 'buy' ? 'KRW' : selectedCurrency;
-  const toCurrency = type === 'buy' ? selectedCurrency : 'KRW';
-  return {
-    fromCurrency,
-    toCurrency,
-    forexAmount: Number(forexAmount),
-  };
-};
+const DEBOUNCE_MS = 400;
 
 export const useQuote = (
-  type: 'buy' | 'sell',
-  selectedCurrency: Exclude<Currency, 'KRW'>,
-  forexAmount: number
+  exchangeType: ExchangeType,
+  selectedCurrency: ForexCurrency,
+  forexAmount: number = 0
 ) => {
   const [debouncedAmount, setDebouncedAmount] = useState(forexAmount);
 
-  // 디바운스 처리
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedAmount(forexAmount);
-    }, 400);
+    }, DEBOUNCE_MS);
 
     return () => clearTimeout(handler);
   }, [forexAmount]);
+
+  const { fromCurrency, toCurrency } = getCurrencyPair(
+    exchangeType,
+    selectedCurrency
+  );
+
   const { data, isLoading, error } = useQuery({
-    queryKey: queryKeys.exchange.quote(type, debouncedAmount),
+    queryKey: queryKeys.exchange.quote(
+      exchangeType,
+      selectedCurrency,
+      debouncedAmount
+    ),
     queryFn: () =>
-      requestQuoteApi(getQuoteRequest(type, selectedCurrency, debouncedAmount)),
+      requestQuoteApi({
+        fromCurrency,
+        toCurrency,
+        forexAmount: debouncedAmount,
+      }),
     enabled: debouncedAmount > 0,
   });
 
