@@ -1,7 +1,7 @@
 export type ApiResponse<T> = {
   code: 'OK' | ApiException | DomainException;
   message: string;
-  data: T | null;
+  data: T;
 };
 
 export type ApiException =
