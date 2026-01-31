@@ -28,6 +28,7 @@ export const Provider = ({ children }: { children: React.ReactNode }) => {
           queries: {
             staleTime: 60 * 1000,
             refetchOnWindowFocus: false,
+            retry: false,
           },
         },
         queryCache: new QueryCache({

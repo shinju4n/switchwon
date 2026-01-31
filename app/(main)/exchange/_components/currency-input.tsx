@@ -21,6 +21,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
           className={cn(
             'flex items-center gap-2 rounded-[12px] border border-[#374553] bg-white p-6 transition-all',
             'focus-within:border-transparent focus-within:ring-2 focus-within:ring-blue-500',
+            props.disabled && 'cursor-not-allowed bg-[#F1F2F4]',
             errorMessage ? 'border-red-500' : 'border-[#374553]'
           )}
         >
@@ -29,6 +30,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
             ref={ref}
             className={cn(
               'min-w-0 flex-1 bg-transparent text-end text-[20px] font-semibold text-[#646F7C] outline-none placeholder:text-gray-400',
+
               className
             )}
           />

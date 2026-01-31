@@ -31,10 +31,10 @@ export const api = async <T>(
     ...options,
   });
 
-  const data = await response.json();
+  const data: T = await response.json();
 
   if (!response.ok) {
-    throw new ApiError(response.status, data);
+    throw new ApiError(response.status, data as ApiErrorResponse);
   }
 
   return data;
