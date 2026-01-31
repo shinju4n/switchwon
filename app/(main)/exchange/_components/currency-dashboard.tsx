@@ -1,22 +1,8 @@
+'use client';
 import { TriangleDownIcon, TriangleUpIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
-
-const MOCK_DATA = [
-  {
-    exchangeRateId: 52680,
-    currency: 'JPY',
-    rate: 939.16,
-    changePercentage: 1.81,
-    applyDateTime: '2026-01-30T21:58:00',
-  },
-  {
-    exchangeRateId: 52679,
-    currency: 'USD',
-    rate: 1489.02,
-    changePercentage: -0.53,
-    applyDateTime: '2026-01-30T21:58:00',
-  },
-];
+import { ExchangeRatesLatest } from '../_types/exchange-rates.type';
+import { useExchangeRateLatest } from '../_hooks/useExchangeRateLatest';
 
 const CURRENCY_LIST = [
   {
@@ -30,11 +16,13 @@ const CURRENCY_LIST = [
 ];
 
 export const CurrencyDashboard = () => {
+  const { data } = useExchangeRateLatest();
+
   return (
     <div className="flex gap-5">
       {CURRENCY_LIST.map((currency) => {
-        const currencyData = MOCK_DATA.find(
-          (data) => data.currency === currency.key
+        const currencyData = data?.data?.find(
+          (data: ExchangeRatesLatest) => data.currency === currency.key
         );
         if (!currencyData) return null;
         return (
