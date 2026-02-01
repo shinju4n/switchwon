@@ -1,10 +1,10 @@
-import { Currency } from '@/types/exchange.type';
+import { ForexCurrency } from '../_utils/currency';
 
-export type ExchangeRatesLatestResponse = ExchangeRatesLatest[];
+export type ExchangeRatesLatestResponse = ExchangeRate[];
 
-export type ExchangeRatesLatest = {
+export type ExchangeRate = {
   exchangeRateId: number;
-  currency: Currency;
+  currency: ForexCurrency;
   rate: number;
   changePercentage: number;
   applyDateTime: string;

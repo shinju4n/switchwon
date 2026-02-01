@@ -7,7 +7,7 @@ import {
 import { useQuote } from './useQuote';
 import { useOrder } from './useOrder';
 import { useExchangeRateLatest } from './useExchangeRateLatest';
-import { getCurrencyPair, ForexCurrency } from '../_utils/currency';
+import { getCurrencyPair } from '../_utils/currency';
 
 export const useExchangeForm = () => {
   const form = useForm<ExchangeFormValues>({
@@ -30,13 +30,7 @@ export const useExchangeForm = () => {
   const forexAmount = useWatch({ control: form.control, name: 'forexAmount' });
 
   const { data: exchangeRatesData } = useExchangeRateLatest();
-  const exchangeRates = exchangeRatesData?.data ?? [];
-
-  // KRW 제외한 환전 가능한 통화 목록
-  const availableCurrencies = exchangeRates.filter(
-    (rate): rate is typeof rate & { currency: ForexCurrency } =>
-      rate.currency !== 'KRW'
-  );
+  const availableCurrencies = exchangeRatesData?.data ?? [];
 
   const selectedRate = availableCurrencies.find(
     (rate) => rate.currency === selectedCurrency

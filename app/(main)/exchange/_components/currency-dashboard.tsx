@@ -3,21 +3,15 @@ import { TriangleDownIcon, TriangleUpIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { useExchangeRateLatest } from '../_hooks/useExchangeRateLatest';
 import { CURRENCY_META } from '../_constants/currency';
-import { Currency } from '@/types/exchange.type';
 
 export const CurrencyDashboard = () => {
   const { data } = useExchangeRateLatest();
 
   const exchangeRates = data?.data ?? [];
 
-  const availableCurrencies = exchangeRates.filter(
-    (rate): rate is typeof rate & { currency: Exclude<Currency, 'KRW'> } =>
-      rate.currency !== 'KRW'
-  );
-
   return (
     <div className="flex gap-5">
-      {availableCurrencies.map((rate) => {
+      {exchangeRates.map((rate) => {
         const meta = CURRENCY_META[rate.currency];
         return (
           <div

@@ -4,6 +4,25 @@ export type ExchangeType = 'buy' | 'sell';
 export type ForexCurrency = Exclude<Currency, 'KRW'>;
 
 /**
+ * 통화 정렬 순서
+ */
+const CURRENCY_ORDER: Record<ForexCurrency, number> = {
+  USD: 0,
+  JPY: 1,
+};
+
+/**
+ * 외화 정렬 (USD → JPY 순)
+ */
+export const sortForex = <T extends { currency: ForexCurrency }>(
+  items: T[]
+): T[] => {
+  return [...items].sort(
+    (a, b) => CURRENCY_ORDER[a.currency] - CURRENCY_ORDER[b.currency]
+  );
+};
+
+/**
  * 환전 타입에 따른 통화 쌍 반환
  * - buy (매수): KRW → 외화 (외화를 사기 위해 KRW 지불)
  * - sell (매도): 외화 → KRW (외화를 팔고 KRW 수령)
