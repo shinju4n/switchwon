@@ -41,12 +41,12 @@ export const useExchangeForm = () => {
     onSuccess: () => form.reset(),
   });
 
-  const handleSubmit = form.handleSubmit(() => {
+  const handleSubmit = form.handleSubmit((values) => {
     if (!selectedRate?.exchangeRateId) return;
 
     const { fromCurrency, toCurrency } = getCurrencyPair(
-      exchangeType,
-      selectedCurrency
+      values.exchangeType,
+      values.selectedCurrency
     );
 
     orderMutation.mutate({
