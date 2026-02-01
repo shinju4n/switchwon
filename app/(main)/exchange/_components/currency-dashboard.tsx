@@ -21,7 +21,9 @@ export const CurrencyDashboard = () => {
             <div className="flex items-center justify-between">
               <div className="flex w-full items-center justify-between gap-2">
                 <span>{rate.currency}</span>
-                <span className="text-sm text-[#646F7C]">{meta.name}</span>
+                <span className="text-sm text-[#646F7C]">
+                  {meta.countryName} {meta.currencyName}
+                </span>
               </div>
             </div>
 

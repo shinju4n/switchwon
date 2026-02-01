@@ -93,7 +93,7 @@ export const ExchangeForm = () => {
                         width={24}
                         height={24}
                       />
-                      {meta.name}
+                      {meta.currencyName}
                     </DropdownMenuItem>
                   );
                 })}
@@ -133,7 +133,7 @@ export const ExchangeForm = () => {
             onChange={handleAmountChange}
             suffix={
               <span className="text-[20px] font-medium text-[#646F7C]">
-                {typeText.actionSuffix(currencyMeta.shortName)}
+                {typeText.actionSuffix(currencyMeta.currencyName)}
               </span>
             }
           />
