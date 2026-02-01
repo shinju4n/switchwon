@@ -17,6 +17,7 @@ export const useOrder = (options?: UseOrderOptions) => {
     onSuccess: () => {
       toast.success('환전이 완료되었습니다');
       queryClient.invalidateQueries({ queryKey: queryKeys.wallet.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.order.all });
       options?.onSuccess?.();
     },
     onError: (error) => {
