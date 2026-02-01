@@ -18,3 +18,12 @@ export const CURRENCY_META: Record<Exclude<Currency, 'KRW'>, CurrencyMeta> = {
     iconUrl: '/icons/japan.png',
   },
 };
+
+/**
+ * 통화 기호
+ */
+export const CURRENCY_SYMBOL: Record<Currency, string> = {
+  KRW: '₩',
+  USD: '$',
+  JPY: '¥',
+};
