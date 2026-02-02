@@ -2,18 +2,70 @@
 
 실시간 환율을 조회하고 원화↔외화 환전을 수행하는 서비스
 
+## 실행 방법
+
+```bash
+pnpm install
+pnpm dev
+```
+
+테스트 실행:
+
+```bash
+pnpm test
+```
+
 ## 기술 스택
 
-Core : Next.js 16 (App Router), TypeScript
-Package Manager : pnpm
-Styling : tailwind CSS, shadcn/ui (component library)
-State & Data Fetching : TanStack Query, Zustand
-Form & Validation: React Hook Form, zod
-ETC: prettier, husky, lint-stage
+| 분류                  | 기술                                |
+| --------------------- | ----------------------------------- |
+| Core                  | Next.js 16 (App Router), TypeScript |
+| Package Manager       | pnpm                                |
+| Styling               | Tailwind CSS, shadcn/ui             |
+| State & Data Fetching | TanStack Query                      |
+| Form & Validation     | React Hook Form, Zod                |
+| Testing               | Jest, React Testing Library         |
+| ETC                   | Prettier, Husky, lint-staged        |
 
-## 의사 결정 요소들
+## 폴더 구조
 
-구현을 하면서 고민을 했던 요소들입니다.
+```
+├── app/
+│   ├── (auth)/login/          # 로그인 페이지
+│   │   ├── _api/              # 로그인 API
+│   │   ├── _components/       # 로그인 폼, 히어로
+│   │   ├── _hooks/            # useLogin
+│   │   ├── _schema/           # Zod 스키마
+│   │   └── page.tsx
+│   │
+│   ├── (main)/                # 인증 필요 영역
+│   │   ├── exchange/          # 환전 페이지
+│   │   │   ├── _api/          # 환율, 주문, 지갑 API
+│   │   │   ├── _components/   # 환전 폼, 통화 대시보드
+│   │   │   ├── _hooks/        # useOrder, useQuote, useWallet
+│   │   │   ├── _utils/        # 통화 관련 유틸
+│   │   │   └── page.tsx
+│   │   │
+│   │   └── exchange-history/  # 거래 내역 페이지
+│   │
+│   ├── api/
+│   │   ├── auth/              # 로그인/로그아웃 (쿠키 설정)
+│   │   └── proxy/[...path]/   # BFF 프록시
+│   │
+│   └── provider.tsx           # QueryClient Provider
+│
+├── components/ui/             # shadcn/ui 컴포넌트
+├── constants/                 # 상수 (경로, 쿼리키)
+├── lib/                       # API 유틸, cn 함수
+└── types/                     # 공통 타입
+```
+
+**폴더 네이밍 규칙:**
+
+- `_api`, `_hooks`, `_components`: 해당 페이지 전용 (라우팅에서 제외)
+- `(auth)`, `(main)`: Route Group (URL에 영향 없음)
+
+## 의사 결정
 
 ### 1. 토큰 저장 방식
 
@@ -61,3 +113,33 @@ BFF(프록시) 구조를 도입한 후, Next.js의 서버 사이드 렌더링(SS
    문제: 서버에서 쿠키를 꺼내기 위해 쓴 next/headers가 클라이언트 코드(브라우저)에 섞여 들어가면서 빌드 에러가 발생했습니다.
 
 해결: if (isServer) 조건문을 사용하고, 필요할 때만 모듈을 불러오는 방식(await import)을 적용해 서버와 클라이언트의 코드가 꼬이지 않도록 분리했습니다.
+
+### 4. 환율 변경 시 재조회 처리
+
+문제: 환전 주문 시 환율이 이미 변경되었을 경우 `EXCHANGE_RATE_MISMATCH` 에러가 발생합니다.
+
+해결: 해당 에러 발생 시 환율 캐시를 무효화하여 최신 환율을 자동으로 다시 조회하도록 구현했습니다. 사용자는 별도 조작 없이 갱신된 환율로 다시 시도할 수 있습니다.
+
+### 5. Open Redirect 방지
+
+문제: 로그인 후 `?redirect=` 파라미터로 리다이렉트할 때, 외부 URL로의 리다이렉트가 가능하면 피싱 공격에 악용될 수 있습니다.
+
+해결: 리다이렉트 경로가 `/`로 시작하고 `//`로 시작하지 않는 경우(상대 경로)만 허용하도록 검증 로직을 추가했습니다.
+
+## 테스트
+
+Jest와 React Testing Library를 사용하여 테스트를 작성했습니다.
+
+```bash
+pnpm test
+```
+
+### 테스트 범위
+
+| 파일               | 테스트 내용                                              |
+| ------------------ | -------------------------------------------------------- |
+| `currency.test.ts` | 통화 정렬, 통화쌍 반환 로직                              |
+| `useOrder.test.ts` | 주문 성공/실패, 캐시 무효화, EXCHANGE_RATE_MISMATCH 처리 |
+| `useLogin.test.ts` | 로그인 성공/실패, 리다이렉트, Open Redirect 방지         |
+
+Hook 테스트는 `jest.mock()`으로 API를 모킹하여 외부 의존성 없이 로직만 검증했습니다.
