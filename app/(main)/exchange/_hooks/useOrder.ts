@@ -25,7 +25,7 @@ export const useOrder = (options?: UseOrderOptions) => {
         error instanceof ApiError &&
         error.code === 'EXCHANGE_RATE_MISMATCH'
       ) {
-        alert('최신 환율 정보가 변경되었습니다');
+        toast.error('환율이 변경되었습니다. 다시 시도해주세요.');
         queryClient.invalidateQueries({ queryKey: queryKeys.exchange.all });
         return;
       }
