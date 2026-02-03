@@ -67,6 +67,7 @@ export const useExchangeForm = () => {
 
     return null;
   }, [quote.data?.data, forexAmount, exchangeType, selectedCurrency, wallets]);
+
   const orderMutation = useOrder({
     onSuccess: () => form.reset(),
   });
@@ -86,6 +87,22 @@ export const useExchangeForm = () => {
       forexAmount,
     });
   });
+
+  const setMaxAmount = () => {
+    if (exchangeType === 'buy') {
+      const krwBalance =
+        wallets.find((w) => w.currency === 'KRW')?.balance ?? 0;
+      const rate = selectedRate?.rate;
+      if (rate && rate > 0) {
+        const maxForex = Math.floor(krwBalance / rate);
+        form.setValue('forexAmount', maxForex);
+      }
+    } else {
+      const forexBalance =
+        wallets.find((w) => w.currency === selectedCurrency)?.balance ?? 0;
+      form.setValue('forexAmount', forexBalance);
+    }
+  };
 
   const isSubmitDisabled =
     !selectedRate?.exchangeRateId ||
@@ -107,5 +124,6 @@ export const useExchangeForm = () => {
     isSubmitDisabled,
     checkBalanceError,
     handleSubmit,
+    setMaxAmount,
   };
 };

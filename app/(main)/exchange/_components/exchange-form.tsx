@@ -31,6 +31,7 @@ export const ExchangeForm = () => {
     isSubmitDisabled,
     checkBalanceError,
     handleSubmit,
+    setMaxAmount,
   } = useExchangeForm();
 
   const currencyMeta = CURRENCY_META[selectedCurrency];
@@ -158,9 +159,20 @@ export const ExchangeForm = () => {
             }
           />
           {checkBalanceError && (
-            <p className="text-destructive text-center text-sm">
-              {checkBalanceError}
-            </p>
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-destructive text-center text-sm">
+                {checkBalanceError}
+              </p>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-fit px-3 py-3"
+                type="button"
+                onClick={setMaxAmount}
+              >
+                최대 금액으로 설정
+              </Button>
+            </div>
           )}
         </div>
       </div>
