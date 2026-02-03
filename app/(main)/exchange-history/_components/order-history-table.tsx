@@ -39,25 +39,33 @@ export const OrderHistoryTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.orderId}>
-              <TableCell className="p-4">{order.orderId}</TableCell>
-              <TableCell className="p-4">
-                {format(order.orderedAt, 'yyyy-MM-dd HH:mm:ss')}
-              </TableCell>
-              <TableCell className="p-4 text-right">
-                {CURRENCY_SYMBOL[order.fromCurrency]}{' '}
-                {order.fromAmount.toLocaleString()}
-              </TableCell>
-              <TableCell className="p-4 text-right">
-                {order.appliedRate.toLocaleString()}
-              </TableCell>
-              <TableCell className="p-4 text-right">
-                {CURRENCY_SYMBOL[order.toCurrency]}{' '}
-                {order.toAmount.toLocaleString()}
+          {orders.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className="p-8 text-center text-gray-500">
+                거래 내역이 없습니다.
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            orders.map((order) => (
+              <TableRow key={order.orderId}>
+                <TableCell className="p-4">{order.orderId}</TableCell>
+                <TableCell className="p-4">
+                  {format(order.orderedAt, 'yyyy-MM-dd HH:mm:ss')}
+                </TableCell>
+                <TableCell className="p-4 text-right">
+                  {CURRENCY_SYMBOL[order.fromCurrency]}{' '}
+                  {order.fromAmount.toLocaleString()}
+                </TableCell>
+                <TableCell className="p-4 text-right">
+                  {order.appliedRate.toLocaleString()}
+                </TableCell>
+                <TableCell className="p-4 text-right">
+                  {CURRENCY_SYMBOL[order.toCurrency]}{' '}
+                  {order.toAmount.toLocaleString()}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>
