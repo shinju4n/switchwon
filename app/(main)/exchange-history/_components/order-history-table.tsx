@@ -10,6 +10,8 @@ import {
 } from '@/components/ui/table';
 import { useOrderHistory } from '../_hooks/useOrderHistory';
 import { format } from 'date-fns';
+import { CURRENCY_SYMBOL } from '@/app/(main)/exchange/_constants/currency';
+
 export const OrderHistoryTable = () => {
   const { data } = useOrderHistory();
   const orders = data?.data ?? [];
@@ -44,12 +46,14 @@ export const OrderHistoryTable = () => {
                 {format(order.orderedAt, 'yyyy-MM-dd HH:mm:ss')}
               </TableCell>
               <TableCell className="p-4 text-right">
+                {CURRENCY_SYMBOL[order.fromCurrency]}{' '}
                 {order.fromAmount.toLocaleString()}
               </TableCell>
               <TableCell className="p-4 text-right">
                 {order.appliedRate.toLocaleString()}
               </TableCell>
               <TableCell className="p-4 text-right">
+                {CURRENCY_SYMBOL[order.toCurrency]}{' '}
                 {order.toAmount.toLocaleString()}
               </TableCell>
             </TableRow>
