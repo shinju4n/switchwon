@@ -10,14 +10,22 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 import { getExchangeRatesLatestApi } from './_api/exchange-rates.api';
+import { getWalletsApi } from './_api/wallet.api';
 import { queryKeys } from '@/constants/query-keys';
 
 const ExchangePage = async () => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: queryKeys.exchange.rates(),
-    queryFn: () => getExchangeRatesLatestApi(),
-  });
+
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.exchange.rates(),
+      queryFn: getExchangeRatesLatestApi,
+    }),
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.wallet.list(),
+      queryFn: getWalletsApi,
+    }),
+  ]);
 
   const dehydratedState = dehydrate(queryClient);
   return (
