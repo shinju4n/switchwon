@@ -26,7 +26,7 @@ const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL;
   }
-  return `http://localhost:${process.env.PORT || 3000}`;
+  return 'http://localhost:3000';
 };
 
 export const api = async <T>(
@@ -45,13 +45,15 @@ export const api = async <T>(
     }
   }
 
+  const { headers: requestHeaders, ...restOptions } = options || {};
+
   const response = await fetch(`${getBaseUrl()}${url}`, {
+    ...restOptions,
     headers: {
       'Content-Type': 'application/json',
       ...authHeaders,
-      ...options?.headers,
+      ...requestHeaders,
     },
-    ...options,
   });
 
   const data: T = await response.json();

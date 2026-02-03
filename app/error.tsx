@@ -10,6 +10,7 @@ type ErrorProps = {
 
 const Error = ({ error, reset }: ErrorProps) => {
   useEffect(() => {
+    // TODO: 에러 로그 전송
     console.error('Error:', error);
   }, [error]);
 
