@@ -21,7 +21,7 @@ export const proxy = (request: NextRequest) => {
     return NextResponse.redirect(url);
   }
 
-  // 이미 로그인되어 있는 상태라면
+  // 이미 로그인되어 있는 상태
   const isUnprotectedPath = UNPROTECTED_PATHS.includes(pathname);
   if (isUnprotectedPath && token) {
     return NextResponse.redirect(new URL(DEFAULT_PROTECTED_PATH, request.url));
@@ -30,7 +30,6 @@ export const proxy = (request: NextRequest) => {
   return NextResponse.next();
 };
 
-// 5. 미들웨어가 작동할 경로 설정
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
