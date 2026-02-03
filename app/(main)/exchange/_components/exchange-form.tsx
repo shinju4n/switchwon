@@ -29,6 +29,7 @@ export const ExchangeForm = () => {
     quote,
     isSubmitting,
     isSubmitDisabled,
+    checkBalanceError,
     handleSubmit,
   } = useExchangeForm();
 
@@ -156,6 +157,11 @@ export const ExchangeForm = () => {
               </span>
             }
           />
+          {checkBalanceError && (
+            <p className="text-destructive text-center text-sm">
+              {checkBalanceError}
+            </p>
+          )}
         </div>
       </div>
 

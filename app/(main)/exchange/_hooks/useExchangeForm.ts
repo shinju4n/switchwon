@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -7,7 +8,9 @@ import {
 import { useQuote } from './useQuote';
 import { useOrder } from './useOrder';
 import { useExchangeRateLatest } from './useExchangeRateLatest';
+import { useWallet } from './useWallet';
 import { getCurrencyPair } from '../_utils/currency';
+import { CURRENCY_SYMBOL } from '../_constants/currency';
 
 export const useExchangeForm = () => {
   const form = useForm<ExchangeFormValues>({
@@ -36,7 +39,34 @@ export const useExchangeForm = () => {
     (rate) => rate.currency === selectedCurrency
   );
 
+  const { data: walletData } = useWallet();
+  const wallets = useMemo(() => walletData?.data?.wallets ?? [], [walletData]);
+
   const quote = useQuote(exchangeType, selectedCurrency, forexAmount);
+
+  // 잔액 부족 검증
+  const checkBalanceError = useMemo(() => {
+    const quoteData = quote.data?.data;
+    if (!quoteData || forexAmount <= 0) return null;
+
+    const getBalance = (
+      currency: ExchangeFormValues['selectedCurrency'] | 'KRW'
+    ) => wallets.find((w) => w.currency === currency)?.balance ?? 0;
+
+    if (exchangeType === 'buy') {
+      const krwBalance = getBalance('KRW');
+      if (quoteData.krwAmount > krwBalance) {
+        return `KRW 잔액이 부족합니다. (보유: ${CURRENCY_SYMBOL.KRW}${krwBalance.toLocaleString()})`;
+      }
+    } else {
+      const forexBalance = getBalance(selectedCurrency);
+      if (forexAmount > forexBalance) {
+        return `${selectedCurrency} 잔액이 부족합니다. (보유: ${CURRENCY_SYMBOL[selectedCurrency]}${forexBalance.toLocaleString()})`;
+      }
+    }
+
+    return null;
+  }, [quote.data?.data, forexAmount, exchangeType, selectedCurrency, wallets]);
   const orderMutation = useOrder({
     onSuccess: () => form.reset(),
   });
@@ -62,7 +92,8 @@ export const useExchangeForm = () => {
     quote.isLoading ||
     quote.isUpdating ||
     orderMutation.isPending ||
-    forexAmount <= 0;
+    forexAmount <= 0 ||
+    !!checkBalanceError;
 
   return {
     form,
@@ -74,6 +105,7 @@ export const useExchangeForm = () => {
     quote,
     isSubmitting: orderMutation.isPending,
     isSubmitDisabled,
+    checkBalanceError,
     handleSubmit,
   };
 };
