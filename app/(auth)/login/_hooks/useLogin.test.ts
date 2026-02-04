@@ -11,15 +11,11 @@ jest.mock('sonner', () => ({
 }));
 
 const mockReplace = jest.fn();
-const mockGet = jest.fn();
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     replace: mockReplace,
     push: jest.fn(),
-  }),
-  useSearchParams: () => ({
-    get: mockGet,
   }),
 }));
 
@@ -44,7 +40,6 @@ const performLogin = async (result: {
 describe('useLogin', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGet.mockReturnValue(null);
   });
 
   it('loginForm이 초기화됨', () => {
@@ -82,11 +77,12 @@ describe('useLogin', () => {
   });
 
   it('redirect 파라미터가 있으면 해당 경로로 리다이렉트', async () => {
-    mockGet.mockReturnValue('/exchange-history');
     mockRequestLoginApi.mockResolvedValue(createLoginResponse());
 
     const { Wrapper } = createWrapper();
-    const { result } = renderHook(() => useLogin(), { wrapper: Wrapper });
+    const { result } = renderHook(() => useLogin('/exchange-history'), {
+      wrapper: Wrapper,
+    });
 
     await performLogin(result);
 
@@ -96,11 +92,12 @@ describe('useLogin', () => {
   });
 
   it('외부 URL redirect는 기본 경로로 대체됨 (Open Redirect 방지)', async () => {
-    mockGet.mockReturnValue('https://malicious.com');
     mockRequestLoginApi.mockResolvedValue(createLoginResponse());
 
     const { Wrapper } = createWrapper();
-    const { result } = renderHook(() => useLogin(), { wrapper: Wrapper });
+    const { result } = renderHook(() => useLogin('https://malicious.com'), {
+      wrapper: Wrapper,
+    });
 
     await performLogin(result);
 
@@ -110,11 +107,12 @@ describe('useLogin', () => {
   });
 
   it('// 로 시작하는 protocol-relative URL도 차단됨', async () => {
-    mockGet.mockReturnValue('//malicious.com');
     mockRequestLoginApi.mockResolvedValue(createLoginResponse());
 
     const { Wrapper } = createWrapper();
-    const { result } = renderHook(() => useLogin(), { wrapper: Wrapper });
+    const { result } = renderHook(() => useLogin('//malicious.com'), {
+      wrapper: Wrapper,
+    });
 
     await performLogin(result);
 

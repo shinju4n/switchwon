@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useLogin } from '../_hooks/useLogin';
 
-export const LoginForm = () => {
-  const { loginForm, requestLogin, isPending } = useLogin();
+export const LoginForm = ({ redirect }: { redirect?: string }) => {
+  const { loginForm, requestLogin, isPending } = useLogin(redirect);
   return (
     <form onSubmit={requestLogin} className="w-full max-w-md">
       <Card className="flex flex-col gap-6 bg-gray-50 px-8 py-6">

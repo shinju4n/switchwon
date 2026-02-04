@@ -1,15 +1,18 @@
-import { Suspense } from 'react';
 import { LoginForm } from './_components/login-form';
 import { LoginHero } from './_components/login-hero';
-import { Loading } from '@/components/ui/loading';
 
-const LoginPage = () => {
+interface LoginPageProps {
+  searchParams: Promise<{
+    redirect?: string;
+  }>;
+}
+
+const LoginPage = async ({ searchParams }: LoginPageProps) => {
+  const { redirect } = await searchParams;
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-12">
       <LoginHero />
-      <Suspense fallback={<Loading />}>
-        <LoginForm />
-      </Suspense>
+      <LoginForm redirect={redirect} />
     </div>
   );
 };
